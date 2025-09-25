@@ -6,7 +6,7 @@
         "author": "华仔仔",
         "bio": "南京工程学院本科，南京农业大学硕士。",
         "avatar": "https://raw.githubusercontent.com/ricardozhy/ricardozhy.github.io/748f8a6c75f01b42447eb3cc665dd69d2ff968fe/src/static/logo.png",
-        "heroBannerImage": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop",
+        "heroBannerImage": "https://images.unsplash.com/photo-1579282322410-33a5a54ac2b2?q=80&w=2070&auto=format&fit=crop",
         "socialLinks": [
             {
                 "name": "GitHub",
@@ -21,6 +21,15 @@
         ]
     },
     "posts": [
+        {
+            "slug": "qpm-1k-32b-r1",
+            "title": "QPM-1K-32B-R1",
+            "date": "2025-05-20",
+            "author": "华仔仔",
+            "excerpt": "QPM-1K-32B-R1 是一个基于GRPO强化学习的小样本唐诗生成推理模型。该模型致力于解决传统唐诗生成面临的两大核心挑战...",
+            "tags": ["QPM-1K-32B-R1", "AI", "大语言模型"],
+            "content": "<div class='text-center'><img src='https://github.com/ricardozhy/QPM-1K-32B-R1/blob/main/%E5%94%90%E8%AF%97logo.png?raw=true' alt='唐诗Logo' class='mx-auto w-1/4' /></div><h2 class='text-2xl font-bold mt-4'>简介</h2><p>QPM-1K-32B-R1 是一个基于GRPO强化学习的小样本唐诗生成推理模型。该模型致力于解决传统唐诗生成面临的两大核心挑战：一方面，避免对超大规模参数量模型的依赖，降低算力消耗；另一方面，克服“形神割裂”现象，使生成的诗歌既符合格律要求，又具备较高的艺术表现力。</p><p>QPM-1K-32B-R1 通过“规则编码-知识蒸馏-动态强化-检索增强”的方法论体系，在仅有32B参数规模的情况下，成功实现了优于DeepSeek-R1-671B等超大模型的唐诗生成能力。</p><h2 class='text-2xl font-bold mt-4'>主要特点</h2><ul><li><strong>低资源高效能</strong>：仅使用1K数据，32B参数规模，显著降低了推理能耗，使文化遗产数字化更加经济可行</li><li><strong>格律准确性卓越</strong>：平仄、押韵、对仗、字数控制准确性显著，押韵准确率高达91.23%</li><li><strong>艺术表现力优异</strong>：通过知识蒸馏和RAG技术，解决了“形神割裂”问题，生成诗歌意境深远</li><li><strong>技术创新性强</strong>：首次将离散的诗歌格律规则转化为可微调的强化学习奖励信号</li><li><strong>通用框架可迁移</strong>：构建的技术框架可推广应用于其他古籍文本生成领域</li></ul><h2 class='text-2xl font-bold mt-4'>应用场景</h2><ul><li>古典诗词创作辅助</li><li>数字人文研究</li><li>文化遗产数字化</li><li>教育领域的古典文学教学</li><li>文化创意产业内容生成</li></ul>"
+        },
         {
             "slug": "autumn-dream",
             "title": "秋梦离",
@@ -60,3 +69,4 @@
     ],
     "aboutContent": "<div class='text-center prose dark:prose-invert max-w-none'><img src='https://raw.githubusercontent.com/ricardozhy/ricardozhy.github.io/748f8a6c75f01b42447eb3cc665dd69d2ff968fe/src/static/logo.png' alt='avatar' class='w-32 h-32 rounded-full mx-auto shadow-lg'><h2 class='text-2xl font-bold mt-6 mb-4'>关于我</h2><p>故事的开始</p><p>离人愁、伤别离;碎碎念、深深思</p><p>本科就读于南京工程学院，硕士就读于南京农业大学</p><h3 class='text-xl font-bold mt-8 mb-4'>联系方式</h3><p>Email: ricardoz_y@qq.com</p></div>"
 }
+
