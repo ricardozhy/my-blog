@@ -1,0 +1,62 @@
+{
+    "siteConfig": {
+        "title": "Ricardoz's Site | 华仔仔的博客",
+        "siteName": "Ricardoz's Site",
+        "subtitle": "凌晨四点，我看海棠花未眠。",
+        "author": "华仔仔",
+        "bio": "南京工程学院本科，南京农业大学硕士。",
+        "avatar": "https://raw.githubusercontent.com/ricardozhy/ricardozhy.github.io/748f8a6c75f01b42447eb3cc665dd69d2ff968fe/src/static/logo.png",
+        "heroBannerImage": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop",
+        "socialLinks": [
+            {
+                "name": "GitHub",
+                "url": "https://github.com/Ricardo-Zzhao",
+                "icon": "fab fa-github"
+            },
+            {
+                "name": "Weibo",
+                "url": "https://weibo.com/",
+                "icon": "fab fa-weibo"
+            }
+        ]
+    },
+    "posts": [
+        {
+            "slug": "autumn-dream",
+            "title": "秋梦离",
+            "date": "2025-05-09",
+            "author": "华仔仔",
+            "excerpt": "飘落的银杏叶里，藏着跨越六十年的絮语",
+            "tags": ["时光小说", "重逢"],
+            "content": "<p>秋梦离推开老宅斑驳的木门时，一片银杏叶正巧落在她肩头。门轴发出悠长的呻吟，灰尘在斜射的晨光中起舞，像被惊扰的时光碎片。</p><p>阁楼木梯比她记忆中陡峭许多。手指触到那口樟木箱铜锁的瞬间，某种温热的震颤突然从指尖窜上心口。钥匙在锁孔里转动的声响，惊醒了沉睡六十年的往事...</p><p>暮色漫进窗棂时，他们坐在回廊剥蚀的红漆柱下。周延之解开牛皮纸包裹，取出本残缺的《楚辞》，扉页题着“青梧存念”。当他念出“袅袅兮秋风，洞庭波兮木叶下”，秋梦离突然记起祖母昏迷前的呓语：“他说战事平息就回来栽银杏......”</p>"
+        },
+        {
+            "slug": "webshell",
+            "title": "Webshell 项目复盘",
+            "date": "2022-05-24",
+            "author": "华仔仔",
+            "excerpt": "基于web的Linux远程访问系统，Linux编程大作业全过程记录与思考。",
+            "tags": ["Linux", "Cloudshell", "项目"],
+            "content": "<h2 class='text-2xl font-bold mt-8 mb-4'>写在前面</h2><p>首先为什么有这篇文章，因为我们一门课程的大作业，有一项是基于web的Linux远程访问系统，在这里我记录了这次大作业的全过程，欢迎大家前来交流。</p><img src='https://raw.githubusercontent.com/ricardozhy/ricardozhy.github.io/748f8a6c75f01b42447eb3cc665dd69d2ff968fe/src/images/05241.png' alt='腾讯云首页' class='my-4 rounded-lg shadow-lg'><h2 class='text-2xl font-bold mt-8 mb-4'>1.webshell的构建</h2><p>老师讲的是可以通过webssh然后访问浏览器就可以在网页里访问。然后我就想到了之前用的阿里云cloudshell，我可以用iframe将阿里云的cloudshell嵌入我自己的网页，那这样不就可以实现将自己的webshell发布在网上了吗...</p><img src='https://raw.githubusercontent.com/ricardozhy/ricardozhy.github.io/748f8a6c75f01b42447eb3cc665dd69d2ff968fe/src/images/05245.png' alt='WebShell效果1' class='my-4 rounded-lg shadow-lg'>"
+        },
+        {
+            "slug": "shitu",
+            "title": "识途",
+            "date": "2022-05-16",
+            "author": "六佰",
+            "excerpt": "妍望着手中初成的画稿，露出了连日来的第一个微笑……",
+            "tags": ["轻小说", "博客"],
+            "content": "<p>妍望着手中初成的画稿，露出了连日来的第一个微笑……</p><p>红，满目的红。红绸，红幔，红纱，红烛，还有着红衣的女子，一如她出嫁，他出征的那日...</p><p>影片的最后，女子素手一扬，宫灯应声坠地，卷起的火舌将纸罩缓缓吞噬。红袍落地，激起沙尘。原来，红衣之下竟是素衣。女子没有悲戚痛哭，依旧是直直站立着，迎着呼啸烈风，对着漫天黄沙，向着远方。一如他出征那日，她在落花纷飞的院里，望着他的离去。</p>"
+        },
+        {
+            "slug": "genshin",
+            "title": "Python爬虫实战：爬取原神同人社照片",
+            "date": "2021-04-24",
+            "author": "华仔仔",
+            "excerpt": "最近在学习python，就有了这篇爬取原神同人社的pljj的照片，第一次写博客，大家多包涵包涵鸭！",
+            "tags": ["Python", "爬虫", "实战"],
+            "content": "<p>最近在学习python，然后看了我室友最近在看小说，就先看了几篇文章，然后爬了本他正在看的小说练练手。然后就有了这篇爬取原神同人社的pljj的照片，第一次写博客，大家多包涵包涵鸭！</p><h2 class='text-2xl font-bold mt-8 mb-4'>2.页面分析</h2><p>先打开<a href='https://bbs.mihoyo.com/ys/home/29?type=hot' class='text-blue-500 hover:underline'>米游社·原神</a>，找到热门部分，右击检查，找到带有getForumPostList的接口，请求拿到数据。</p><pre class='bg-gray-800 text-white p-4 rounded-md my-4 overflow-x-auto'><code>import requests\nimport os\n# ...\nurl='https://bbs-api.mihoyo.com/post/wapi/getForumPostList?forum_id=29'\nresponse = requests.get(url)\nprint(response.json())</code></pre>"
+        }
+    ],
+    "aboutContent": "<div class='text-center prose dark:prose-invert max-w-none'><img src='https://raw.githubusercontent.com/ricardozhy/ricardozhy.github.io/748f8a6c75f01b42447eb3cc665dd69d2ff968fe/src/static/logo.png' alt='avatar' class='w-32 h-32 rounded-full mx-auto shadow-lg'><h2 class='text-2xl font-bold mt-6 mb-4'>关于我</h2><p>故事的开始</p><p>离人愁、伤别离;碎碎念、深深思</p><p>本科就读于南京工程学院，硕士就读于南京农业大学</p><h3 class='text-xl font-bold mt-8 mb-4'>联系方式</h3><p>Email: ricardoz_y@qq.com</p></div>"
+}

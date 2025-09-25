@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <style>
+        :root {
+            --bg-color: #f9fafb;
+            --text-color: #1f2937;
+            --card-bg: #ffffff;
+            --header-bg: rgba(255, 255, 255, 0.8);
+            --border-color: #e5e7eb;
+            --primary-color: #3b82f6;
+        }
+
+        html.dark {
+            --bg-color: #111827;
+            --text-color: #d1d5db;
+            --card-bg: #1f2937;
+            --header-bg: rgba(31, 41, 55, 0.85);
+            --border-color: #374151;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .font-serif-sc { font-family: 'Noto Serif SC', serif; }
+        #hero-banner {
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .typing-cursor { animation: blink 0.7s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        .sticky-nav {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background-color: var(--header-bg);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: top 0.3s;
+        }
+        .post-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: var(--card-bg);
+        }
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        .prose img { border-radius: 0.5rem; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div id="loading-overlay" class="fixed inset-0 bg-[--bg-color] z-[100] flex items-center justify-center">
+        <div class="text-2xl font-serif-sc">加载中...</div>
+    </div>
+
+    <!-- Hero Banner -->
+    <header id="hero-banner" class="h-screen flex items-center justify-center text-white text-center p-4">
+        <div class="z-10 bg-black bg-opacity-50 p-8 rounded-xl">
+            <h1 id="site-title" class="font-serif-sc text-5xl md:text-7xl font-bold"></h1>
+            <p id="site-subtitle" class="text-xl md:text-2xl mt-4"></p>
+        </div>
+    </header>
+
+    <!-- Sticky Navigation -->
+    <nav id="sticky-nav" class="sticky -top-20 w-full z-50 transition-all duration-300">
+        <div class="container mx-auto max-w-6xl px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="#" onclick="showPage('home')" id="nav-author" class="text-2xl font-bold font-serif-sc"></a>
+                <div class="hidden md:flex items-center space-x-6" id="main-menu">
+                    <a href="#" onclick="showPage('home')" class="hover:text-blue-500">首页</a>
+                    <a href="#" onclick="showPage('archives')" class="hover:text-blue-500">归档</a>
+                    <a href="#" onclick="showPage('about')" class="hover:text-blue-500">关于</a>
+                </div>
+                 <div class="flex items-center space-x-4" id="social-links">
+                    <!-- Social links will be injected here -->
+                    <button id="dark-mode-toggle" class="hover:text-blue-500"><i class="fas fa-moon"></i></button>
+                 </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app" class="container mx-auto max-w-6xl p-4 mt-8 min-h-[50vh]">
+        <!-- JS will render content here -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 mt-12 border-t border-[--border-color]">
+        <p id="footer-text"></p>
+    </footer>
+
+    <!-- Live2D Widget -->
+    <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/dist/live2d.min.js"></script>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        
+        let siteData = {};
+
+        try {
+            const response = await fetch('content.json');
+            if (!response.ok) throw new Error('Network response was not ok');
+            siteData = await response.json();
+        } catch (error) {
+            console.error('Failed to load content.json:', error);
+            document.getElementById('app').innerHTML = `<div class="text-center text-red-500">错误：无法加载博客内容 (content.json)。请确保该文件与 personal_blog.html 在同一目录下。</div>`;
+            document.getElementById('loading-overlay').style.display = 'none';
+            return;
+        }
+
+        const { siteConfig, posts, aboutContent } = siteData;
+        
+        // --- INITIALIZE UI ---
+        document.title = siteConfig.title;
+        document.getElementById('site-title').textContent = siteConfig.siteName;
+        document.getElementById('nav-author').textContent = siteConfig.author;
+        document.getElementById('hero-banner').style.backgroundImage = `url('${siteConfig.heroBannerImage}')`;
+        document.getElementById('footer-text').innerHTML = `&copy; ${new Date().getFullYear()} ${siteConfig.siteName}. Powered by Gemini.`;
+
+        const socialLinksContainer = document.getElementById('social-links');
+        let socialLinksHTML = '';
+        siteConfig.socialLinks.forEach(link => {
+            socialLinksHTML += `<a href="${link.url}" target="_blank" class="hover:text-blue-500"><i class="${link.icon}"></i></a>`;
+        });
+        socialLinksHTML += `<button id="dark-mode-toggle" class="hover:text-blue-500"><i class="fas fa-moon"></i></button>`;
+        socialLinksContainer.innerHTML = socialLinksHTML;
+
+        // --- APP LOGIC ---
+        const app = document.getElementById('app');
+        const routes = { 'home': renderHome, 'archives': renderArchives, 'about': renderAbout };
+
+        function renderHome() {
+            let content = `<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                           <main class="md:col-span-8 space-y-8">`;
+            posts.forEach(post => {
+                content += `
+                    <article onclick="showPage('post', '${post.slug}')" class="post-card rounded-lg shadow-md overflow-hidden cursor-pointer border border-[--border-color]">
+                        <div class="p-6">
+                            <h2 class="text-2xl font-bold font-serif-sc mb-2">${post.title}</h2>
+                            <div class="text-sm text-gray-500 dark:text-gray-400 mb-4">${post.date} &bull; ${post.author}</div>
+                            <p class="mb-4">${post.excerpt}</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${post.tags.map(tag => `<span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                    </article>`;
+            });
+            content += `</main>${renderSidebar()}</div>`;
+            return content;
+        }
+
+        function renderPost(slug) {
+            const post = posts.find(p => p.slug === slug);
+            if (!post) return '404 - Post Not Found';
+            return `<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+                        <main class="md:col-span-8">
+                            <article class="bg-[--card-bg] p-6 sm:p-8 rounded-lg shadow-lg border border-[--border-color]">
+                                <button onclick="showPage('home')" class="mb-6 text-blue-500 hover:underline">&larr; 返回首页</button>
+                                <h1 class="text-4xl font-bold font-serif-sc mb-4">${post.title}</h1>
+                                <div class="text-gray-500 dark:text-gray-400 mb-8">${post.date} &bull; ${post.author}</div>
+                                <div class="prose dark:prose-invert max-w-none">${post.content}</div>
+                            </article>
+                        </main>
+                        ${renderSidebar()}
+                    </div>`;
+        }
+
+        function renderArchives() {
+            let content = `<div class="bg-[--card-bg] p-8 rounded-lg shadow-lg border border-[--border-color]">
+                               <h1 class="text-3xl font-bold mb-6 font-serif-sc">文章归档</h1>
+                               <ul class="space-y-4">`;
+            posts.forEach(post => {
+                content += `<li><a href="#" onclick="showPage('post', '${post.slug}')" class="flex justify-between items-baseline group">
+                                <span class="text-lg font-medium group-hover:text-blue-500">${post.title}</span>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">${post.date}</span>
+                            </a></li>`;
+            });
+            content += `</ul></div>`;
+            return content;
+        }
+
+        function renderAbout() {
+            return `<div class="bg-[--card-bg] p-8 rounded-lg shadow-lg border border-[--border-color]">${aboutContent}</div>`;
+        }
+        
+        function renderSidebar() {
+            const recentPosts = posts.slice(0, 5);
+            const allTags = [...new Set(posts.flatMap(p => p.tags))];
+            return `<aside class="md:col-span-4 space-y-8">
+                        <div class="bg-[--card-bg] p-6 rounded-lg shadow-md border border-[--border-color]">
+                            <h3 class="font-bold text-xl mb-4 font-serif-sc">关于我</h3>
+                            <div class="flex items-center space-x-4">
+                                <img src="${siteConfig.avatar}" alt="avatar" class="w-16 h-16 rounded-full">
+                                <div><p class="font-bold">${siteConfig.author}</p><p class="text-sm text-gray-500 dark:text-gray-400">${siteConfig.bio}</p></div>
+                            </div>
+                        </div>
+                        <div class="bg-[--card-bg] p-6 rounded-lg shadow-md border border-[--border-color]">
+                            <h3 class="font-bold text-xl mb-4 font-serif-sc">近期文章</h3>
+                            <ul class="space-y-2">${recentPosts.map(p => `<li><a href="#" onclick="showPage('post', '${p.slug}')" class="hover:text-blue-500">${p.title}</a></li>`).join('')}</ul>
+                        </div>
+                        <div class="bg-[--card-bg] p-6 rounded-lg shadow-md border border-[--border-color]">
+                            <h3 class="font-bold text-xl mb-4 font-serif-sc">标签</h3>
+                            <div class="flex flex-wrap gap-2">${allTags.map(tag => `<span class="bg-gray-200 text-gray-800 text-sm font-medium px-3 py-1 rounded-full dark:bg-gray-700 dark:text-gray-300">${tag}</span>`).join('')}</div>
+                        </div>
+                    </aside>`;
+        }
+        
+        window.showPage = (page, slug = '') => { window.location.hash = `#!/${page}${slug ? '/' + slug : ''}`; }
+        
+        function router() {
+            const path = window.location.hash.replace('#!/', '').split('/');
+            const page = path[0] || 'home';
+            const slug = path[1] || '';
+
+            if (page === 'post') app.innerHTML = renderPost(slug);
+            else if (routes[page]) app.innerHTML = routes[page]();
+            else app.innerHTML = renderHome();
+            window.scrollTo(0, 0);
+        }
+
+        // --- EVENT LISTENERS & INITIALIZATION ---
+        window.addEventListener('hashchange', router);
+        router(); // Initial route
+
+        // Typing effect
+        const subtitleEl = document.getElementById('site-subtitle');
+        let charIndex = 0;
+        function typeEffect() {
+            if (charIndex < siteConfig.subtitle.length) {
+                subtitleEl.innerHTML = `${siteConfig.subtitle.substring(0, charIndex + 1)}<span class="typing-cursor">|</span>`;
+                charIndex++;
+                setTimeout(typeEffect, 150);
+            } else {
+                subtitleEl.innerHTML = siteConfig.subtitle;
+            }
+        }
+        typeEffect();
+
+        // Sticky Nav
+        const nav = document.getElementById('sticky-nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > window.innerHeight - 100) {
+                nav.classList.add('sticky-nav');
+                nav.style.top = '0';
+            } else {
+                nav.classList.remove('sticky-nav');
+                nav.style.top = '-5rem';
+            }
+        });
+
+        // Dark Mode
+        const toggle = document.getElementById('dark-mode-toggle');
+        const icon = toggle.querySelector('i');
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                document.documentElement.classList.remove('dark');
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        };
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(currentTheme);
+
+        toggle.addEventListener('click', () => {
+            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+        
+        // Live2D Widget
+        L2Dwidget.init({
+            "model": {"jsonPath": "https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget-models/models/shizuku/shizuku.model.json"},
+            "display": {"position": "right", "width": 150, "height": 300, "hOffset": 10, "vOffset": -20},
+            "mobile": {"show": true, "scale": 0.5},
+            "react": {"opacityDefault": 0.8,"opacityOnHover": 1}
+        });
+        
+        document.getElementById('loading-overlay').style.display = 'none';
+    });
+    </script>
+</body>
+</html>
+
