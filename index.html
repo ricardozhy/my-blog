@@ -1,4 +1,4 @@
-                                                                                                                              <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -110,21 +110,22 @@
         <p id="footer-text"></p>
     </footer>
 
-    <!-- Live2D Widget -->
+    <!-- Live2D Widget Script -->
     <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/dist/live2d.min.js"></script>
     
     <script>
-    document.addEventListener('DOMContentLoaded', async () => {
+    // Main application logic is wrapped in a function to ensure it runs after the page is loaded.
+    async function initializeBlog() {
         
         let siteData = {};
 
         try {
             const response = await fetch('content.json');
-            if (!response.ok) throw new Error('Network response was not ok');
+            if (!response.ok) throw new Error(`Network response was not ok, status: ${response.status}`);
             siteData = await response.json();
         } catch (error) {
             console.error('Failed to load content.json:', error);
-            document.getElementById('app').innerHTML = `<div class="text-center text-red-500">错误：无法加载博客内容 (content.json)。请确保该文件与 personal_blog.html 在同一目录下。</div>`;
+            document.getElementById('app').innerHTML = `<div class="text-center text-red-500 p-8 bg-red-100 rounded-lg">错误：无法加载博客内容 (content.json)。<br>请确保该文件与 index.html 在同一目录下并且已成功上传。</div>`;
             document.getElementById('loading-overlay').style.display = 'none';
             return;
         }
@@ -141,7 +142,7 @@
         const socialLinksContainer = document.getElementById('social-links');
         let socialLinksHTML = '';
         siteConfig.socialLinks.forEach(link => {
-            socialLinksHTML += `<a href="${link.url}" target="_blank" class="hover:text-blue-500"><i class="${link.icon}"></i></a>`;
+            socialLinksHTML += `<a href="${link.url}" target="_blank" rel="noopener noreferrer" class="hover:text-blue-500"><i class="${link.icon}"></i></a>`;
         });
         socialLinksHTML += `<button id="dark-mode-toggle" class="hover:text-blue-500"><i class="fas fa-moon"></i></button>`;
         socialLinksContainer.innerHTML = socialLinksHTML;
@@ -243,7 +244,6 @@
         window.addEventListener('hashchange', router);
         router(); // Initial route
 
-        // Typing effect
         const subtitleEl = document.getElementById('site-subtitle');
         let charIndex = 0;
         function typeEffect() {
@@ -257,7 +257,6 @@
         }
         typeEffect();
 
-        // Sticky Nav
         const nav = document.getElementById('sticky-nav');
         window.addEventListener('scroll', () => {
             if (window.scrollY > window.innerHeight - 100) {
@@ -269,39 +268,45 @@
             }
         });
 
-        // Dark Mode
-        const toggle = document.getElementById('dark-mode-toggle');
-        const icon = toggle.querySelector('i');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const icon = darkModeToggle.querySelector('i');
         const applyTheme = (theme) => {
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
-                icon.classList.replace('fa-moon', 'fa-sun');
+                if(icon) icon.classList.replace('fa-moon', 'fa-sun');
             } else {
                 document.documentElement.classList.remove('dark');
-                icon.classList.replace('fa-sun', 'fa-moon');
+                if(icon) icon.classList.replace('fa-sun', 'fa-moon');
             }
         };
         const currentTheme = localStorage.getItem('theme') || 'light';
         applyTheme(currentTheme);
 
-        toggle.addEventListener('click', () => {
+        darkModeToggle.addEventListener('click', () => {
             const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
             localStorage.setItem('theme', newTheme);
             applyTheme(newTheme);
         });
         
-        // Live2D Widget
-        L2Dwidget.init({
-            "model": {"jsonPath": "https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget-models/models/shizuku/shizuku.model.json"},
-            "display": {"position": "right", "width": 150, "height": 300, "hOffset": 10, "vOffset": -20},
-            "mobile": {"show": true, "scale": 0.5},
-            "react": {"opacityDefault": 0.8,"opacityOnHover": 1}
-        });
-        
+        // Hide loading overlay
         document.getElementById('loading-overlay').style.display = 'none';
-    });
+
+        // Initialize Live2D Widget Safely
+        try {
+            L2Dwidget.init({
+                "model": {"jsonPath": "https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget-models/models/shizuku/shizuku.model.json"},
+                "display": {"position": "right", "width": 150, "height": 300, "hOffset": 10, "vOffset": -20},
+                "mobile": {"show": true, "scale": 0.5},
+                "react": {"opacityDefault": 0.8,"opacityOnHover": 1}
+            });
+        } catch (e) {
+            console.warn("Live2D widget failed to initialize.", e);
+        }
+    }
+
+    // Run the blog initialization code after the DOM is fully loaded.
+    document.addEventListener('DOMContentLoaded', initializeBlog);
     </script>
 </body>
 </html>
-
 
