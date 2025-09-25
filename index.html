@@ -43,20 +43,22 @@
         }
 
         .font-serif-sc { font-family: 'Noto Serif SC', serif; }
-        #hero-banner {
+        
+        #page-header {
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
         }
+
         .typing-cursor { animation: blink 0.7s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
+
         .sticky-nav {
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             background-color: var(--header-bg);
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: top 0.3s;
         }
+
         .post-card {
             transition: transform 0.3s, box-shadow 0.3s;
             background-color: var(--card-bg);
@@ -73,35 +75,35 @@
     <div id="loading-overlay" class="fixed inset-0 bg-[--bg-color] z-[100] flex items-center justify-center">
         <div class="text-2xl font-serif-sc">加载中...</div>
     </div>
-
-    <!-- Hero Banner -->
-    <header id="hero-banner" class="h-screen flex items-center justify-center text-white text-center p-4">
-        <div class="z-10 bg-black bg-opacity-50 p-8 rounded-xl">
-            <h1 id="site-title" class="font-serif-sc text-5xl md:text-7xl font-bold"></h1>
-            <p id="site-subtitle" class="text-xl md:text-2xl mt-4"></p>
+    
+    <!-- Page Header -->
+    <header id="page-header" class="relative bg-gray-800 text-white">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="relative container mx-auto max-w-6xl px-4 z-10">
+            <!-- Sticky Navigation -->
+            <nav id="sticky-nav" class="sticky top-0 w-full z-50 transition-all duration-300">
+                <div class="flex justify-between items-center h-16">
+                    <a href="#" onclick="showPage('home')" id="nav-author" class="text-2xl font-bold font-serif-sc text-[--text-color]"></a>
+                    <div class="hidden md:flex items-center space-x-6 text-[--text-color]" id="main-menu">
+                        <a href="#" onclick="showPage('home')" class="hover:text-blue-500">首页</a>
+                        <a href="#" onclick="showPage('archives')" class="hover:text-blue-500">归档</a>
+                        <a href="#" onclick="showPage('about')" class="hover:text-blue-500">关于</a>
+                    </div>
+                     <div class="flex items-center space-x-4 text-[--text-color]" id="social-links">
+                        <!-- Social links will be injected here -->
+                     </div>
+                </div>
+            </nav>
+            <div class="text-center py-20 md:py-32">
+                 <h1 id="site-title" class="font-serif-sc text-5xl md:text-7xl font-bold"></h1>
+                 <p id="site-subtitle" class="text-xl md:text-2xl mt-4"></p>
+            </div>
         </div>
     </header>
 
-    <!-- Sticky Navigation -->
-    <nav id="sticky-nav" class="sticky -top-20 w-full z-50 transition-all duration-300">
-        <div class="container mx-auto max-w-6xl px-4">
-            <div class="flex justify-between items-center h-16">
-                <a href="#" onclick="showPage('home')" id="nav-author" class="text-2xl font-bold font-serif-sc"></a>
-                <div class="hidden md:flex items-center space-x-6" id="main-menu">
-                    <a href="#" onclick="showPage('home')" class="hover:text-blue-500">首页</a>
-                    <a href="#" onclick="showPage('archives')" class="hover:text-blue-500">归档</a>
-                    <a href="#" onclick="showPage('about')" class="hover:text-blue-500">关于</a>
-                </div>
-                 <div class="flex items-center space-x-4" id="social-links">
-                    <!-- Social links will be injected here -->
-                    <button id="dark-mode-toggle" class="hover:text-blue-500"><i class="fas fa-moon"></i></button>
-                 </div>
-            </div>
-        </div>
-    </nav>
 
     <!-- Main Content -->
-    <main id="app" class="container mx-auto max-w-6xl p-4 mt-8 min-h-[50vh]">
+    <main id="app" class="container mx-auto max-w-6xl p-4 -mt-16 z-20 relative">
         <!-- JS will render content here -->
     </main>
 
@@ -114,7 +116,6 @@
     <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/dist/live2d.min.js"></script>
     
     <script>
-    // Main application logic is wrapped in a function to ensure it runs after the page is loaded.
     async function initializeBlog() {
         
         let siteData = {};
@@ -132,11 +133,10 @@
 
         const { siteConfig, posts, aboutContent } = siteData;
         
-        // --- INITIALIZE UI ---
         document.title = siteConfig.title;
         document.getElementById('site-title').textContent = siteConfig.siteName;
         document.getElementById('nav-author').textContent = siteConfig.author;
-        document.getElementById('hero-banner').style.backgroundImage = `url('${siteConfig.heroBannerImage}')`;
+        document.getElementById('page-header').style.backgroundImage = `url('${siteConfig.heroBannerImage}')`;
         document.getElementById('footer-text').innerHTML = `&copy; ${new Date().getFullYear()} ${siteConfig.siteName}. Powered by Gemini.`;
 
         const socialLinksContainer = document.getElementById('social-links');
@@ -147,7 +147,6 @@
         socialLinksHTML += `<button id="dark-mode-toggle" class="hover:text-blue-500"><i class="fas fa-moon"></i></button>`;
         socialLinksContainer.innerHTML = socialLinksHTML;
 
-        // --- APP LOGIC ---
         const app = document.getElementById('app');
         const routes = { 'home': renderHome, 'archives': renderArchives, 'about': renderAbout };
 
@@ -156,11 +155,11 @@
                            <main class="md:col-span-8 space-y-8">`;
             posts.forEach(post => {
                 content += `
-                    <article onclick="showPage('post', '${post.slug}')" class="post-card rounded-lg shadow-md overflow-hidden cursor-pointer border border-[--border-color]">
-                        <div class="p-6">
-                            <h2 class="text-2xl font-bold font-serif-sc mb-2">${post.title}</h2>
+                    <article onclick="showPage('post', '${post.slug}')" class="post-card rounded-lg shadow-lg overflow-hidden cursor-pointer border border-[--border-color]">
+                        <div class="p-8">
+                            <h2 class="text-3xl font-bold font-serif-sc mb-3">${post.title}</h2>
                             <div class="text-sm text-gray-500 dark:text-gray-400 mb-4">${post.date} &bull; ${post.author}</div>
-                            <p class="mb-4">${post.excerpt}</p>
+                            <p class="mb-5">${post.excerpt}</p>
                             <div class="flex flex-wrap gap-2">
                                 ${post.tags.map(tag => `<span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">${tag}</span>`).join('')}
                             </div>
@@ -170,17 +169,33 @@
             content += `</main>${renderSidebar()}</div>`;
             return content;
         }
-
+        
         function renderPost(slug) {
-            const post = posts.find(p => p.slug === slug);
-            if (!post) return '404 - Post Not Found';
+            const postIndex = posts.findIndex(p => p.slug === slug);
+            if (postIndex === -1) return '404 - Post Not Found';
+            
+            const post = posts[postIndex];
+            const prevPost = postIndex > 0 ? posts[postIndex - 1] : null;
+            const nextPost = postIndex < posts.length - 1 ? posts[postIndex + 1] : null;
+
+            let navigation = `<nav class="flex justify-between mt-8 pt-6 border-t border-[--border-color]">`;
+            if (prevPost) {
+                navigation += `<div><a href="#" onclick="showPage('post', '${prevPost.slug}')" class="hover:text-blue-500">&larr; ${prevPost.title}</a></div>`;
+            } else {
+                 navigation += `<div></div>`;
+            }
+            if (nextPost) {
+                navigation += `<div><a href="#" onclick="showPage('post', '${nextPost.slug}')" class="hover:text-blue-500">${nextPost.title} &rarr;</a></div>`;
+            }
+            navigation += `</nav>`;
+
             return `<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
                         <main class="md:col-span-8">
                             <article class="bg-[--card-bg] p-6 sm:p-8 rounded-lg shadow-lg border border-[--border-color]">
-                                <button onclick="showPage('home')" class="mb-6 text-blue-500 hover:underline">&larr; 返回首页</button>
                                 <h1 class="text-4xl font-bold font-serif-sc mb-4">${post.title}</h1>
                                 <div class="text-gray-500 dark:text-gray-400 mb-8">${post.date} &bull; ${post.author}</div>
                                 <div class="prose dark:prose-invert max-w-none">${post.content}</div>
+                                ${navigation}
                             </article>
                         </main>
                         ${renderSidebar()}
@@ -189,8 +204,7 @@
 
         function renderArchives() {
             let content = `<div class="bg-[--card-bg] p-8 rounded-lg shadow-lg border border-[--border-color]">
-                               <h1 class="text-3xl font-bold mb-6 font-serif-sc">文章归档</h1>
-                               <ul class="space-y-4">`;
+                               <h1 class="text-3xl font-bold mb-6 font-serif-sc">文章归档</h1><ul class="space-y-4">`;
             posts.forEach(post => {
                 content += `<li><a href="#" onclick="showPage('post', '${post.slug}')" class="flex justify-between items-baseline group">
                                 <span class="text-lg font-medium group-hover:text-blue-500">${post.title}</span>
@@ -209,18 +223,18 @@
             const recentPosts = posts.slice(0, 5);
             const allTags = [...new Set(posts.flatMap(p => p.tags))];
             return `<aside class="md:col-span-4 space-y-8">
-                        <div class="bg-[--card-bg] p-6 rounded-lg shadow-md border border-[--border-color]">
+                        <div class="bg-[--card-bg] p-6 rounded-lg shadow-lg border border-[--border-color]">
                             <h3 class="font-bold text-xl mb-4 font-serif-sc">关于我</h3>
                             <div class="flex items-center space-x-4">
                                 <img src="${siteConfig.avatar}" alt="avatar" class="w-16 h-16 rounded-full">
                                 <div><p class="font-bold">${siteConfig.author}</p><p class="text-sm text-gray-500 dark:text-gray-400">${siteConfig.bio}</p></div>
                             </div>
                         </div>
-                        <div class="bg-[--card-bg] p-6 rounded-lg shadow-md border border-[--border-color]">
+                        <div class="bg-[--card-bg] p-6 rounded-lg shadow-lg border border-[--border-color]">
                             <h3 class="font-bold text-xl mb-4 font-serif-sc">近期文章</h3>
                             <ul class="space-y-2">${recentPosts.map(p => `<li><a href="#" onclick="showPage('post', '${p.slug}')" class="hover:text-blue-500">${p.title}</a></li>`).join('')}</ul>
                         </div>
-                        <div class="bg-[--card-bg] p-6 rounded-lg shadow-md border border-[--border-color]">
+                        <div class="bg-[--card-bg] p-6 rounded-lg shadow-lg border border-[--border-color]">
                             <h3 class="font-bold text-xl mb-4 font-serif-sc">标签</h3>
                             <div class="flex flex-wrap gap-2">${allTags.map(tag => `<span class="bg-gray-200 text-gray-800 text-sm font-medium px-3 py-1 rounded-full dark:bg-gray-700 dark:text-gray-300">${tag}</span>`).join('')}</div>
                         </div>
@@ -240,9 +254,8 @@
             window.scrollTo(0, 0);
         }
 
-        // --- EVENT LISTENERS & INITIALIZATION ---
         window.addEventListener('hashchange', router);
-        router(); // Initial route
+        router(); 
 
         const subtitleEl = document.getElementById('site-subtitle');
         let charIndex = 0;
@@ -258,13 +271,12 @@
         typeEffect();
 
         const nav = document.getElementById('sticky-nav');
+        const header = document.getElementById('page-header');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > window.innerHeight - 100) {
-                nav.classList.add('sticky-nav');
-                nav.style.top = '0';
+            if (window.scrollY > 0) {
+                 nav.classList.add('sticky-nav');
             } else {
-                nav.classList.remove('sticky-nav');
-                nav.style.top = '-5rem';
+                 nav.classList.remove('sticky-nav');
             }
         });
 
@@ -288,10 +300,8 @@
             applyTheme(newTheme);
         });
         
-        // Hide loading overlay
         document.getElementById('loading-overlay').style.display = 'none';
 
-        // Initialize Live2D Widget Safely
         try {
             L2Dwidget.init({
                 "model": {"jsonPath": "https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget-models/models/shizuku/shizuku.model.json"},
@@ -304,7 +314,6 @@
         }
     }
 
-    // Run the blog initialization code after the DOM is fully loaded.
     document.addEventListener('DOMContentLoaded', initializeBlog);
     </script>
 </body>
